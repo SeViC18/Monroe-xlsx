@@ -16,13 +16,10 @@ except FileNotFoundError:
 
 #me imprime los nombres de las hojas para controlar nada mas
 sheetNames = wb.sheetnames
-# print(sheetNames) # se podria borrar
+
 
 #carga la hoja que quiero trabajar
 sheet = wb[sheetNames[0]]
-
-#me imprime el valor de la celda D18 para probar nada mas
-print(sheet['D18'].value)
 
 
 # Defino las columnas como variables para luego iterarlas
@@ -35,6 +32,8 @@ colAL = sheet['AL']
 colAD = sheet['AD']
 colAM = sheet['AM']
 
+
+#Transformo en numero los valores que estan cargados como texto (por usar diferente punto/coma decimal)
 for cell in colP[1:]:
    if cell.value != None:
     cellValue = cell.value
@@ -57,7 +56,7 @@ per_iibb_3= 'Perc.IB 49/98 Bs As Med. 3%'
 per_iibb_25= 'Perc.IB 49/98 BsAs Otros 2,5%'
 iva_21 = 'I.V.A. 21%'
 iva_105 = 'I.V.A. 10.5%'
-iva_27 = 'I.V.A. 27%' #EStimo sera asi por que nunca vino uno como para saber.
+iva_27 = 'I.V.A. 27%' #Estimo sera asi por que todavia no se presento en una planilla como para comprobarlo
 
 sheet['AA1'].value = 'Percep. IVA'
 sheet['AB1'].value = 'Percep IIBB 3%'
@@ -74,24 +73,17 @@ sheet['AL1'].value = 'Exento/No grav'
 sheet['AM1'].value = 'CUIT Monroe'
 
 
+#Mueve los valores necesarios a las nuevas columnas
 for cell1 in colA:
     if cell1.value == cell_cabecera:
       detailsRow = cell1.row + 1
       for col in sheet.iter_rows(min_row=detailsRow, min_col=14, max_col=14):
-         print(col[0]) # agregado para cheque borrar en final
-         # counter += 1
-         # print('Run:', counter, cell2) # agregado para cheque borrar en final
          if sheet.cell(row=col[0].row, column=1).value == cell_cabecera:
-            # asdasd = sheet.cell(row=col[0].row, column=1) #puesto para debuggear, se puede borrar
-            # print(asdasd) #puesto para debuggear, se puede borrar
             break
          elif col[0].value == per_iva:
-            # print(sheet.cell(row=cell2.row , column=13).value) # agregado para chequeo borrar en final
             cell_iva_copy = sheet.cell(row=col[0].row, column=19).value
             print(cell_iva_copy)
             sheet.cell(row=cell1.row, column=27, value=cell_iva_copy)
-            debugVar = sheet.cell(row=cell1.row, column=16).value #voy a guardar esto en una variable para podr debugearlo.
-            print(debugVar)
          elif col[0].value == per_iibb_3:
             cell_iib3_copy = sheet.cell(row=col[0].row, column=19).value
             sheet.cell(row=cell1.row, column=28, value=cell_iib3_copy)
@@ -114,13 +106,14 @@ for cell1 in colA:
             cell_ngrav27 = cell_iva27_copy/0.27
             sheet.cell(row=cell1.row, column=36, value=cell_ngrav27)
 
+
+#Elimina todas las filas que no son las principales y no pueden estar al momento de importar
 for cell in colA[1:]:
    if cell.value != cell_cabecera and cell.value is not None:
       sheet.delete_rows(cell.row)
 
 
-
-
+#Calcula los netos gravados
 for cell in colAK[1:]:
    if sheet.cell(row=cell.row, column=32).value != None:
       net21 = float(sheet.cell(row=cell.row, column=32).value)
@@ -133,6 +126,7 @@ for cell in colAK[1:]:
    else: net27 = 0
    cell.value = (net21+net105+net27)
 
+#Calcula el No gravado
 for cell in colAL[1:-1]:
    if sheet.cell(row=cell.row, column=16).value != None:
       sumNetos = sheet.cell(row=cell.row, column=16).value
@@ -142,6 +136,7 @@ for cell in colAL[1:-1]:
    else: netoGrav = 0
    cell.value = (sumNetos-netoGrav)
 
+#SUma las percepciones de IIBB (deben estar toda sumadas en la misma celda para poder importar)
 for cell in colAD[1:]:
    if sheet.cell(row=cell.row, column=28).value != None:
       percep3 = sheet.cell(row=cell.row, column=28).value
@@ -151,37 +146,10 @@ for cell in colAD[1:]:
    else: percep25 = 0
    cell.value = (percep3 + percep25)
 
+#Carga el CUIT del proveedor (Monroe) para que lo levante el importador
 for cell in colAM[1:]:
    cell.value = '330517059095'
 
 
-
-print(sheet.max_row)
-
-
-
-
-
-
-#itero por las celdas de la columna H, y si encuentro una celda cuyo valor coincida con la varible que le paso me imprime el valor por consola, lo copia en un variable y dsp graba esa variable en una celda.
-
-
 #guarda el libro (con otro nombre)
 wb.save(r"Monroe americana planilla\MonroeArreglado.xlsx")
-
-
-
-
-## Asi como esta funciona perfecto.
-
-'''
-to-do:
--Procesar varias planillas de una (dif quincena o sucursal) [En Standby por que no es tan necesario, parece que hay una planilla con todo junto]
--Mostrar Error cuando no se enuentre la planilla - DONE
--convertir a csv
--Dar la posibilidad de indicar un nuevo nombre para la planilla.
--Automatizar el nombre de salida (con periodo por ej)
--Incorporar controles, ej de totales y etc por si aparece una variable no esperada para no tomar valores erroneos
--empaquetar?
-
-'''
