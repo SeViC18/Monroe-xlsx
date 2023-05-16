@@ -37,14 +37,12 @@ colAM = sheet['AM']
 for cell in colP[1:]:
    if cell.value != None:
     cellValue = cell.value
-    print(cellValue)
     parsedValue = float(cellValue.replace(',',''))
     cell.value = parsedValue
 
 for cell in colS[1:]:
    if cell.value != None:
     cellValue = cell.value
-    print(cellValue)
     parsedValue = float(cellValue.replace(',',''))
     cell.value = parsedValue
 
