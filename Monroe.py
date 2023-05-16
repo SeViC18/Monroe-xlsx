@@ -6,7 +6,7 @@ from tkinter import messagebox
 
 #carga la planilla
 try:
-   wb = openpyxl.load_workbook(r"Monroe americana planilla\Monroe.xlsx")
+   wb = openpyxl.load_workbook(r"Monroe.xlsx")
 except FileNotFoundError:
    print('El nombre de archivo es incorecto / El archivo indicado no existe')
    print('')
@@ -82,7 +82,6 @@ for cell1 in colA:
             break
          elif col[0].value == per_iva:
             cell_iva_copy = sheet.cell(row=col[0].row, column=19).value
-            print(cell_iva_copy)
             sheet.cell(row=cell1.row, column=27, value=cell_iva_copy)
          elif col[0].value == per_iibb_3:
             cell_iib3_copy = sheet.cell(row=col[0].row, column=19).value
@@ -152,4 +151,4 @@ for cell in colAM[1:]:
 
 
 #guarda el libro (con otro nombre)
-wb.save(r"Monroe americana planilla\MonroeArreglado.xlsx")
+wb.save(r"MonroeArreglado.xlsx")
