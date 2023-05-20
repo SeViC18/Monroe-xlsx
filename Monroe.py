@@ -12,9 +12,11 @@ except FileNotFoundError:
    print('')
    messagebox.showerror(title='Error', message='El nombre de archivo es incorecto / El archivo indicado no existe')
 
+mes = input('Ingrese el mes del archivo a procesar: ')
+año = input('Ingrese el año del archivo a procesar: ')
 
 
-#me imprime los nombres de las hojas para controlar nada mas
+#Guardo los nombres de las hojas en una variable
 sheetNames = wb.sheetnames
 
 
@@ -149,4 +151,4 @@ for cell in colAM[1:]:
 
 
 #guarda el libro (con otro nombre)
-wb.save(r"MonroeArreglado.xlsx")
+wb.save(f'MonroeArreglado {mes}-{año}.xlsx')
