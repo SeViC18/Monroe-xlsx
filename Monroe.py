@@ -4,9 +4,11 @@ import sys
 import tkinter
 from tkinter import messagebox
 
+
 #carga la planilla
 try:
-   wb = openpyxl.load_workbook(r"Monroe.xlsx")
+   path=r'C:\Users\Seba\Documents\Documentos c Bckp\Code Projects\Monroe xlsx Script\Monroe\Monroe.xlsx'
+   wb = openpyxl.load_workbook(path)
 except FileNotFoundError:
    print('El nombre de archivo es incorecto / El archivo indicado no existe')
    print('')
@@ -152,3 +154,8 @@ for cell in colAM[1:]:
 
 #guarda el libro (con otro nombre)
 wb.save(f'MonroeArreglado{mes}-{año}.xlsx')
+nombre=f'MonroeArreglado{mes}-{año}.xlsx'
+
+#lo mueve a la carpeta ignorada
+pathDestino=os.path.join(r'C:\Users\Seba\Documents\Documentos c Bckp\Code Projects\Monroe xlsx Script\Monroe', nombre)
+os.replace(nombre, pathDestino)
