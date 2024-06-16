@@ -149,7 +149,7 @@ for cell in colAD[1:]:
 
 #Carga el CUIT del proveedor (Monroe) para que lo levante el importador
 for cell in colAM[1:]:
-   cell.value = '330517059095'
+   cell.value = '30517059095'
 
 
 #guarda el libro (con otro nombre)
