@@ -4,11 +4,19 @@ import sys
 import tkinter
 from tkinter import messagebox
 
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Define the relative path to the Excel file
+excel_file_name = 'Monroe.xlsx'
+relative_excel_path = os.path.join(script_dir, excel_file_name)
 
 #carga la planilla
+# try:
+#    path=r'C:\Users\Seba\Documents\Documentos c Bckp\Code Projects\Monroe xlsx Script\Monroe\Monroe.xlsx'
+#    wb = openpyxl.load_workbook(path)
 try:
-   path=r'C:\Users\Seba\Documents\Documentos c Bckp\Code Projects\Monroe xlsx Script\Monroe\Monroe.xlsx'
-   wb = openpyxl.load_workbook(path)
+    wb = openpyxl.load_workbook(relative_excel_path)
 except FileNotFoundError:
    print('El nombre de archivo es incorecto / El archivo indicado no existe')
    print('')
@@ -152,10 +160,20 @@ for cell in colAM[1:]:
    cell.value = '30517059095'
 
 
-#guarda el libro (con otro nombre)
-wb.save(f'MonroeArreglado{mes}-{año}.xlsx')
-nombre=f'MonroeArreglado{mes}-{año}.xlsx'
 
-#lo mueve a la carpeta ignorada
-pathDestino=os.path.join(r'C:\Users\Seba\Documents\Documentos c Bckp\Code Projects\Monroe xlsx Script\Monroe', nombre)
-os.replace(nombre, pathDestino)
+# Guarda el libro (con otro nombre) en el mismo folder que el script (chat gpt)
+output_file_name = f'MonroeArreglado{mes}-{año}.xlsx'
+relative_output_path = os.path.join(script_dir, output_file_name)
+wb.save(relative_output_path)
+
+# #guarda el libro (con otro nombre) Original seba
+# wb.save(f'MonroeArreglado{mes}-{año}.xlsx')
+# nombre=f'MonroeArreglado{mes}-{año}.xlsx'
+
+# # #lo mueve a la carpeta ignorada
+# # pathDestino=os.path.join(r'C:\Users\Seba\Documents\Documentos c Bckp\Code Projects\Monroe xlsx Script\Monroe', nombre)
+# # os.replace(nombre, pathDestino)
+
+# # Lo mueve a la carpeta ignorada (path relativo Chatgpt)
+# relative_dest_path = os.path.join(script_dir, 'Monroe', nombre)
+# os.replace(nombre, relative_dest_path)
